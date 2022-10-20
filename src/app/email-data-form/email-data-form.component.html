@@ -1,0 +1,74 @@
+<h1>Nahlášení přeplněného autobusu</h1>
+<div class="form-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Linka autobusu</mat-label>
+    <mat-select [(value)]="busLine">
+      <mat-option
+        *ngFor="let line of lines"
+        [value]="line"
+      >
+        {{line}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Autobus byl plný od zastávky</mat-label>
+    <mat-select [(value)]="fromStation">
+      <mat-option
+        *ngFor="let station of stations"
+        [value]="station"
+      >
+        {{station}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field
+    class="example-full-width"
+    appearance="fill"
+  >
+    <mat-label>Jméno (zobrazí se v podpisu)</mat-label>
+    <input
+      matInput
+      placeholder="Vyplňte jméno"
+      type="text"
+      [(ngModel)]="name"
+    >
+  </mat-form-field>
+
+  <mat-form-field
+    class="example-full-width"
+    appearance="fill"
+  >
+    <mat-label>Jméno (zobrazí se v podpisu)</mat-label>
+    <input
+      matInput
+      placeholder="Vyplňte jméno"
+      type="time"
+      [(ngModel)]="time"
+    >
+  </mat-form-field>
+</div>
+
+<div class="preview-container">
+  <div style="display: flex; flex-direction: column;">
+    <a [href]="getMailtoString()" class="send-button"><button mat-raised-button color="primary" [disabled]="!isValid()">Odelslat</button></a>
+    <ng-container *ngIf="isValid()">
+      <mat-hint>Stisknutím tlačítka se otevře předvyplněný email, který následně můžete odeslat. Email můžete před odesláním upravit</mat-hint>
+    </ng-container>
+    <ng-container *ngIf="!isValid()">
+      <mat-hint>Abyste mohli email odeslat, vyplňte prosím všechna políčka</mat-hint>
+    </ng-container>
+  </div>
+  <div style="margin-top: 16px;">
+    Náhled emailu:
+  </div>
+  <div class="mail-preview">
+    <div>
+      <div>Komu: {{ to }}</div>
+      <div class="subject">Předmět: {{ getSubjectString() }}</div>
+      <div class="body">{{ getBodyString() }}</div>
+    </div>
+  </div>
+</div>
