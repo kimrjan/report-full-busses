@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-interface Food {
-  value: string;
-  viewValue: string;
+import { Component, OnInit, SecurityContext } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+interface BusLine {
+  id: number;
+  line: string;
 }
 @Component({
   selector: 'app-email-data-form',
@@ -21,21 +22,21 @@ export class EmailDataFormComponent implements OnInit {
     'Nádraží Veleslavín',
   ];
 
-  lines: string[] = [
-    '388 Slaný - Nádraží Veleslavín',
-    '389 Louny - Nádraží Veleslavín',
-    '388 Nádraží Veleslavín - Slaný',
-    '389 Nádraží Veleslavín - Louny',
+  lines: BusLine[] = [
+    { id: 388, line: 'Slaný - Nádraží Veleslavín' },
+    { id: 389, line: 'Louny - Nádraží Veleslavín' },
+    { id: 388, line: 'Nádraží Veleslavín - Slaný' },
+    { id: 389, line: 'Nádraží Veleslavín - Louny' },
   ];
 
   to = 'honza.kimr@email.cz'; //'podnety@idsk.cz';
 
-  name = '';
+  name?: string;
 
-  fromStation = '';
-  busLine = '';
+  fromStation?: string
+  busLine?: BusLine;
 
-  time = '';
+  time = '07:00';
 
   constructor() { }
 
@@ -43,22 +44,24 @@ export class EmailDataFormComponent implements OnInit {
   }
 
   isValid(): boolean {
-    return this.name.length > 0 && this.fromStation.length > 0 && this.busLine.length > 0 && this.time.length > 0;
+    return !!this.name && !!this.fromStation && !!this.busLine && this.time.length > 0;
   }
 
   getSubjectString(): string {
     const date = new Date();
-    return `Přeplněný autobus linky ${this.busLine} ${date.toLocaleDateString('cs-CZ')}`;
+    return `Přeplněný autobus linky ${this.busLine?.id ?? '<i>číslo_autobusu</i>'} (${this.busLine?.line ?? '<i>trasa_autobusu</i>'}) ${date.toLocaleDateString('cs-CZ')}`;
   }
 
   getBodyString(): string {
-    return `Dobrý den,\nod stanice ${this.fromStation} v ${this.time}\nS pozdravem\n\n${this.name}`;
+    return `Dobrý den,\n\nautobus číslo ${this.busLine?.id ?? '<i>číslo_autobusu</i>'} na trase ${this.busLine?.line ?? '<i>trasa_autobusu</i>'} byl od stanice ${this.fromStation ?? '<i>ze_stnice</i>'} (odjezd: ${this.time}) přeplněný.` +
+      `\nBylo by možné navýšit kapacitu autobusů v tento čas?\n\nS pozdravem\n\n${this.name ?? '<i>jmeno</i>'}`;
   }
 
   getMailtoString(): string {
     if (!this.isValid()) {
-      return '';
+      return '#';
     }
-    return `mailto:${this.to}?subject=${this.getSubjectString()}&body=${this.getBodyString()}`;
+
+    return `mailto:${this.to}?subject=${encodeURIComponent(this.getSubjectString())}&body=${encodeURIComponent(this.getBodyString())}`;
   }
 }

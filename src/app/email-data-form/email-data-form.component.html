@@ -7,7 +7,7 @@
         *ngFor="let line of lines"
         [value]="line"
       >
-        {{line}}
+        {{line.id}} {{line.line}}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -28,12 +28,11 @@
     class="example-full-width"
     appearance="fill"
   >
-    <mat-label>Jméno (zobrazí se v podpisu)</mat-label>
+    <mat-label>Čas odjezdu autobusu podle jízdního řádu ze zvolené zastávky</mat-label>
     <input
       matInput
-      placeholder="Vyplňte jméno"
-      type="text"
-      [(ngModel)]="name"
+      type="time"
+      [(ngModel)]="time"
     >
   </mat-form-field>
 
@@ -45,30 +44,56 @@
     <input
       matInput
       placeholder="Vyplňte jméno"
-      type="time"
-      [(ngModel)]="time"
+      type="text"
+      [(ngModel)]="name"
     >
   </mat-form-field>
 </div>
 
 <div class="preview-container">
   <div style="display: flex; flex-direction: column;">
-    <a [href]="getMailtoString()" class="send-button"><button mat-raised-button color="primary" [disabled]="!isValid()">Odelslat</button></a>
-    <ng-container *ngIf="isValid()">
-      <mat-hint>Stisknutím tlačítka se otevře předvyplněný email, který následně můžete odeslat. Email můžete před odesláním upravit</mat-hint>
-    </ng-container>
-    <ng-container *ngIf="!isValid()">
-      <mat-hint>Abyste mohli email odeslat, vyplňte prosím všechna políčka</mat-hint>
-    </ng-container>
+    <a
+      [href]="getMailtoString()"
+      mat-raised-button
+      color="primary"
+      class="send-button"
+      [disabled]="!isValid()"
+    >Odeslat</a>
+
+    <div style="margin: 16px auto">
+      <ng-container *ngIf="isValid()">
+        <mat-hint>Stisknutím tlačítka se otevře předvyplněný email, který následně můžete odeslat. Email můžete před
+          odesláním upravit</mat-hint>
+      </ng-container>
+      <ng-container *ngIf="!isValid()">
+        <mat-hint>Abyste mohli email odeslat, vyplňte prosím všechna políčka</mat-hint>
+      </ng-container>
+    </div>
+
+    
   </div>
-  <div style="margin-top: 16px;">
+  <h3 style="margin-top: 16px;">
     Náhled emailu:
-  </div>
+  </h3>
   <div class="mail-preview">
     <div>
       <div>Komu: {{ to }}</div>
-      <div class="subject">Předmět: {{ getSubjectString() }}</div>
-      <div class="body">{{ getBodyString() }}</div>
+      <div class="subject">Předmět: <span [innerHTML]="getSubjectString()"></span></div>
+      <div class="body" [innerHTML]="getBodyString()"></div>
     </div>
   </div>
+</div>
+
+
+<div>
+  <h3>Jak to funguje</h3>
+  <p>Informace vyplněné do políček se vloží do předpřipravené šablony. Po kliknutí na tlačíto odeslat budete přesměrováni do Vaší emailové
+    aplikace, kde vytvoří email s předvyplněným adresátem, předmětem a obsahem. Tento email můžete ještě upravovat.</p>
+
+  <p>Tato webová stránka <strong>nepoužívá cookies, nezpracovává žádné Vaše údaje ani nemá přístup do Vašeho mailu</strong>.</p>
+
+  <p>Zdrojový kód je volně přístupný <a
+      href="https://github.com/kimrjan/report-full-busses"
+      target="_blank"
+    >zde</a>.</p>
 </div>
