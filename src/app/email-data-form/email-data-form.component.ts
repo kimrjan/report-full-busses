@@ -53,7 +53,7 @@ export class EmailDataFormComponent implements OnInit {
   }
 
   getBodyString(): string {
-    return `Dobrý den,\n\nautobus číslo ${this.busLine?.id ?? '<i>číslo_autobusu</i>'} na trase ${this.busLine?.line ?? '<i>trasa_autobusu</i>'} byl od stanice ${this.fromStation ?? '<i>ze_stnice</i>'} (odjezd: ${this.time}) přeplněný.` +
+    return `Dobrý den,\n\nautobus číslo ${this.busLine?.id ?? '<i>číslo_autobusu</i>'} na trase ${this.busLine?.line ?? '<i>trasa_autobusu</i>'} byl od stanice ${this.fromStation ?? '<i>od_stanice</i>'} (odjezd: ${this.time}) přeplněný.` +
       `\nBylo by možné navýšit kapacitu autobusů v tento čas?\n\nS pozdravem\n\n${this.name ?? '<i>jmeno</i>'}`;
   }
 
